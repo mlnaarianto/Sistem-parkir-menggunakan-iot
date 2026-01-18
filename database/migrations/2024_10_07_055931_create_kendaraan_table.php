@@ -9,14 +9,22 @@ class CreateKendaraanTable extends Migration
     public function up()
     {
         Schema::create('kendaraan', function (Blueprint $table) {
-            // Mengatur plat nomor sebagai primary key
-            $table->string('plat_nomor')->primary(); // Primary key kendaraan
-            $table->string('id_pengguna'); // Foreign key, tipe data string
-            $table->enum('jenis', ['Mobil', 'Motor']); // Tipe data jenis kendaraan ENUM
-            $table->string('qr_code'); // QR Code kendaraan
-            $table->string('foto'); // Foto kendaraan
+            // Primary key
+            $table->string('plat_nomor')->primary();
 
-            // Enum untuk warna kendaraan dengan daftar lengkap
+            // Foreign key
+            $table->string('id_pengguna');
+
+            // Enum jenis kendaraan
+            $table->enum('jenis', ['Mobil', 'Motor']);
+
+            // QR Code BOLEH NULL
+            $table->string('qr_code')->nullable();
+
+            // Foto kendaraan
+            $table->string('foto');
+
+            // Enum warna kendaraan
             $table->enum('warna', [
                 'Merah',
                 'Biru',
@@ -31,19 +39,18 @@ class CreateKendaraanTable extends Migration
                 'Ungu',
                 'Emas',
                 'Pink'
-
             ]);
 
-            // Definisikan foreign key
+            // Foreign key constraint
             $table->foreign('id_pengguna')
                 ->references('id_pengguna')
                 ->on('pengguna_parkir')
-                ->onDelete('cascade'); // Hapus kendaraan jika pengguna dihapus
+                ->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('kendaraan'); // Hapus tabel jika rollback
+        Schema::dropIfExists('kendaraan');
     }
 }
